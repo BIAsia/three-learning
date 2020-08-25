@@ -4,6 +4,8 @@ import { TrackballControls } from './lib/TrackballControls.js';
 
 var canvas, renderer, camera, scene, effect, controls;
 var sphere;
+const fgColor = "#F4ECE0";
+const bgColor = "#84A2BE";
 var start = Date.now();
 
 init();
@@ -22,13 +24,13 @@ function createCamera(){
 function createEffect(){
   effect = new AsciiEffect(renderer, ' .:-+*=%@#', {invert: true});
   effect.setSize(window.innerWidth, window.innerHeight);
-  effect.domElement.style.color='white';
-  effect.domElement.style.backgroundColor='black';
+  effect.domElement.style.color=fgColor;
+  effect.domElement.style.backgroundColor=bgColor;
 }
 
 
 function init(){
-  canvas = document.querySelector('#c');
+  //canvas = document.querySelector('#c');
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   
