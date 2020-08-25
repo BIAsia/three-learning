@@ -11,7 +11,8 @@ var windowHalfX = window.innerWidth/2;
 var windowHalfY = window.innerHeight/2;
 
 const fgColor = "#F4ECE0";
-const bgColor = "#84A2BE";
+const bgColor = "#E8CAAE";
+const lightColor = "AEA795"
 const start = Date.now();
 
 init();
@@ -29,19 +30,19 @@ function createCamera(){
 
 function createScene(){
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(bgColor);
-    scene.fog = new THREE.Fog(0xffffff, 1, 10000);
+    scene.background = new THREE.Color("#EFDCCA");
+    scene.fog = new THREE.FogExp2(fgColor, 0.002);
 }
 
 function createLight(){
     surroundlight = new THREE.AmbientLight(bgColor, 1);
     scene.add(surroundlight);
-    light1 = new THREE.PointLight(fgColor,0.5);
-    light1.position.set(500, 500, 500);
-    scene.add(light1);
+    light1 = new THREE.PointLight(fgColor,0.1);
+    light1.position.set(1000, 1000, 1000);
+    //scene.add(light1);
     light2 = new THREE.PointLight(bgColor, 0.5);
     light2.position.set(-500, -500, -500);
-    scene.add(light2);
+    //scene.add(light2);
 }
 
 function createOthers(){
