@@ -2,6 +2,7 @@ import * as THREE from './lib/three.module.js';
 import Stats from './lib/stats.module.js';
 
 var canvas, renderer, camera, scene;
+var surroundlight, light1, light2;
 var stats, group;
 
 
@@ -28,12 +29,19 @@ function createCamera(){
 
 function createScene(){
     scene = new THREE.Scene();
-    scene.background = new THREE.Color('#ffffff');
+    scene.background = new THREE.Color(bgColor);
     scene.fog = new THREE.Fog(0xffffff, 1, 10000);
 }
 
 function createLight(){
-  
+    surroundlight = new THREE.AmbientLight(bgColor, 1);
+    scene.add(surroundlight);
+    light1 = new THREE.PointLight(fgColor,0.5);
+    light1.position.set(500, 500, 500);
+    scene.add(light1);
+    light2 = new THREE.PointLight(bgColor, 0.5);
+    light2.position.set(-500, -500, -500);
+    scene.add(light2);
 }
 
 function createOthers(){
@@ -45,7 +53,7 @@ function createOthers(){
 
 function createSceneContent(){
     var geometry = new THREE.BoxBufferGeometry(100,100,100);
-    var material = new THREE.MeshNormalMaterial();
+    var material = new THREE.MeshPhongMaterial(fgColor);
 
     group = new THREE.Group();
     for (var i = 0; i < 1000; i++){
@@ -117,7 +125,7 @@ function onWindowResize(){
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-  effect.setSize(window.innerWidth, window.innerHeight);
+  //effect.setSize(window.innerWidth, window.innerHeight);
 }
 
 function onDocumentMouseMove(event){
