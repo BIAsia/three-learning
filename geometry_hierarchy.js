@@ -7,12 +7,13 @@ var stats, group;
 
 
 var mouseX = 0, mouseY = 0;
+const d=2000, r=1000;
 var windowHalfX = window.innerWidth/2;
 var windowHalfY = window.innerHeight/2;
 
-const fgColor = "#F4ECE0";
-const bgColor = "#E8CAAE";
-const lightColor = "AEA795"
+const fgColor = "#236FE1";
+const bgColor = "#403DD3";
+const lightColor = "#0DA6D7"
 const start = Date.now();
 
 init();
@@ -30,17 +31,17 @@ function createCamera(){
 
 function createScene(){
     scene = new THREE.Scene();
-    scene.background = new THREE.Color("#EFDCCA");
-    scene.fog = new THREE.FogExp2(fgColor, 0.002);
+    scene.background = new THREE.Color(bgColor);
+    scene.fog = new THREE.FogExp2(bgColor, 0.002);
 }
 
 function createLight(){
-    surroundlight = new THREE.AmbientLight(bgColor, 1);
+    surroundlight = new THREE.AmbientLight(fgColor, 1);
     scene.add(surroundlight);
-    light1 = new THREE.PointLight(fgColor,0.1);
+    light1 = new THREE.PointLight(lightColor,0.1);
     light1.position.set(1000, 1000, 1000);
-    //scene.add(light1);
-    light2 = new THREE.PointLight(bgColor, 0.5);
+    scene.add(light1);
+    light2 = new THREE.PointLight(lightColor, 0.5);
     light2.position.set(-500, -500, -500);
     //scene.add(light2);
 }
@@ -48,7 +49,7 @@ function createLight(){
 function createOthers(){
   // create Controls / Effects / Stats ...
   stats = new Stats();
-  document.body.appendChild(stats.dom);
+  //document.body.appendChild(stats.dom);
   document.addEventListener('mousemove', onDocumentMouseMove, false);
 }
 
@@ -60,9 +61,9 @@ function createSceneContent(){
     for (var i = 0; i < 1000; i++){
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(
-            Math.random()*2000 - 1000,
-            Math.random()*2000 - 1000,
-            Math.random()*2000 - 1000
+            Math.random()*d - r,
+            Math.random()*d - r,
+            Math.random()*d - r
         );
         mesh.rotation.x = Math.random()*2*Math.PI;
         mesh.rotation.y = Math.random()*2*Math.PI;
@@ -130,6 +131,6 @@ function onWindowResize(){
 }
 
 function onDocumentMouseMove(event){
-    mouseX = ( event.clientX - windowHalfX ) * 10;
-	mouseY = ( event.clientY - windowHalfY ) * 10;
+    mouseX = ( event.clientX - windowHalfX ) * 2;
+	  mouseY = ( event.clientY - windowHalfY ) * 2;
 }
