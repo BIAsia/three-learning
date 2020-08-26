@@ -1,4 +1,17 @@
+::selection {
+    background:none; 
+    color:#FFCE95;
+}
 
+::-moz-selection {
+    background:none; 
+    color:#FFCE95;
+}
+
+::-webkit-selection {
+    background:none; 
+    color:#FFCE95;
+}
 html,
 body {
     margin: 0;
@@ -66,7 +79,7 @@ header {
     bottom: 20px;
     padding: 8px;
     border-radius: 0px;
-    background: #236FE1;
+    background: none;
 
     font-family: Futura;
     font-style: normal;
@@ -92,6 +105,7 @@ header {
 
     transition: 0.3s;
 }
+
 .footer-code:hover {
     background: #FFFFFF;
     color: #236FE1;
