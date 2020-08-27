@@ -1,16 +1,16 @@
 ::selection {
     background:none; 
-    color:#FFCE95;
+    color:#FF4C24;
 }
 
 ::-moz-selection {
     background:none; 
-    color:#FFCE95;
+    color:#FF4C24;
 }
 
 ::-webkit-selection {
     background:none; 
-    color:#FFCE95;
+    color:#FF4C24;
 }
 html,
 body {
@@ -108,5 +108,5 @@ header {
 
 .footer-code:hover {
     background: #FFFFFF;
-    color: #236FE1;
+    color: #FF4C24;
 }
