@@ -1,9 +1,9 @@
-import * as THREE from './lib/three.module.js';
-import Stats from './lib/stats.module.js';
+import * as THREE from '../lib/three.module.js';
+import Stats from '../lib/stats.module.js';
 
-var canvas, renderer, camera, scene;
+var canvas, renderer, camera, scene, loader;
 var surroundlight, light1, light2;
-var stats, group;
+var stats, group, object;
 
 
 var mouseX = 0, mouseY = 0;
