@@ -1,6 +1,6 @@
-import * as THREE from './lib/three.module.js';
-import {AsciiEffect} from './lib/AsciiEffect.js';
-import { TrackballControls } from './lib/TrackballControls.js';
+import * as THREE from '../lib/three.module.js';
+import {AsciiEffect} from '../lib/AsciiEffect.js';
+import { TrackballControls } from '../lib/TrackballControls.js';
 
 var canvas, renderer, camera, scene, effect, controls;
 var sphere;

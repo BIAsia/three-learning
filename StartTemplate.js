@@ -1,10 +1,14 @@
-import * as THREE from './lib/three.module.js';
-import {} from './lib/.js';
+import * as THREE from '../lib/three.module.js';
+import { OBJLoader } from '../lib/OBJLoader.js';
 
 var canvas, renderer, camera, scene;
 var effect, controls;
-var light;
 var sphere;
+
+var mouseX = 0, mouseY = 0;
+var windowHalfX = window.innerWidth/2;
+var windowHalfY = window.innerHeight/2;
+
 const fgColor = "#F4ECE0";
 const bgColor = "#84A2BE";
 const start = Date.now();
@@ -41,7 +45,7 @@ function createLight(){
 
 function createOthers(){
     // create Controls / Effects / Stats ...
-    stats = new Stats();
+  
 }
 
 function createSceneContent(){
@@ -68,7 +72,7 @@ function init(){
 
   //document.body.appendChild(effect.domElement);
   document.body.appendChild(renderer.domElement);
-  
+  document.addEventListener('mousemove', onDocumentMouseMove, false);
   window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -78,8 +82,11 @@ function render(){
 
   animate(timer);
 
-  controls.update();
+  //controls.update();
 
+  camera.position.x += (mouseX - camera.position.x)*0.05;
+  camera.position.y += (-mouseY - camera.position.y)*0.05;
+  camera.lookAt(scene.position);
   //effect.render(scene, camera);
   renderer.render(scene, camera);
 }
@@ -100,4 +107,9 @@ function onWindowResize(){
 
   renderer.setSize(window.innerWidth, window.innerHeight);
   effect.setSize(window.innerWidth, window.innerHeight);
+}
+
+function onDocumentMouseMove(event){
+  mouseX = (event.clientX - windowHalfX) / 2;
+  mouseY = (event.clientY - windowHalfY) / 2;
 }
