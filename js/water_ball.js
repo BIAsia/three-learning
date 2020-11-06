@@ -3,7 +3,7 @@ import { OBJLoader } from '../lib/OBJLoader.js';
 
 var canvas, renderer, camera, scene;
 var effect, controls, loader;
-var object, sphere, manager;
+var object, sphere, manager, group, circle;
 var texture, textureLoader;
 
 var mouseX = 0, mouseY = 0;
@@ -30,6 +30,7 @@ function createCamera(){
 function createScene(){
     scene = new THREE.Scene();
     scene.background = new THREE.Color('#9DC8C8');
+    scene.fog = new THREE.FogExp2(0x9DC8C8, 0.002);
     //scene.fog = new THREE.fog(0xffffff, 1, 10000);
 }
 
@@ -91,15 +92,30 @@ function import_obj(){
 function createSceneContent(){
   
   sphere = new THREE.Mesh(
-        new THREE.SphereBufferGeometry(10, 100, 100),
+        new THREE.SphereBufferGeometry(10, 200, 200),
         new THREE.MeshPhongMaterial({flatShading: true, map: texture}));
   scene.add(sphere);
 
-  object = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(100,100,1),
-    new THREE.MeshStandardMaterial({roughness:0.8, metalness:0})
+  circle = new THREE.Mesh(
+    new THREE.TorusBufferGeometry(20,0.1,20,100),
+    new THREE.MeshStandardMaterial({roughness:0, metalness:0, emissive:0x9DC8C8, opacity:0.4, transparent:true})
   );
-  //scene.add(object);
+  //scene.add(circle);
+  
+  
+  group = new THREE.Group();
+  for (var i = 20; i < 200; i+=20){
+    object = new THREE.Points(
+      new THREE.TorusBufferGeometry(i,0.3,1,i*2),
+      new THREE.PointsMaterial({color:0xffffff, size:(Math.sqrt(i/20))})
+    );
+    object.name = i;
+    group.add(object);
+  }
+  
+  scene.add(group);
+
+  
 }
 
 function init(){
@@ -135,14 +151,24 @@ function render(){
 
   //controls.update();
 
-  camera.position.x += (mouseX - camera.position.x)*0.05;
-  camera.position.y += (-mouseY - camera.position.y)*0.05;
+  camera.position.x += (mouseX - camera.position.x)*0.03;
+  camera.position.y += (-mouseY - camera.position.y)*0.03;
   camera.lookAt(scene.position);
   //effect.render(scene, camera);
   renderer.render(scene, camera);
 }
 
 function animate(timer){
+  circle.rotation.x = -timer*0.0001;
+  group.getObjectByName(20).rotation.x = timer*0.0003;
+  group.getObjectByName(40).rotation.y = timer*0.0003;
+  group.getObjectByName(60).rotation.z = timer*0.0003;
+  group.getObjectByName(80).rotation.z = -timer*0.0001;
+  group.getObjectByName(100).rotation.z = timer*0.00005;
+  group.getObjectByName(120).rotation.z = -timer*0.00001;
+  group.getObjectByName(140).rotation.z = timer*0.000005;
+  group.getObjectByName(160).rotation.z = -timer*0.000001;
+  group.getObjectByName(180).rotation.z = timer*0.0000001;
 
   //sphere.position.y = Math.abs(Math.sin(timer*0.002))*150;
   //sphere.rotation.x = timer*0.03;

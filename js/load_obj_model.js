@@ -3,7 +3,7 @@ import { OBJLoader } from '../lib/OBJLoader.js';
 
 var canvas, renderer, camera, scene;
 var effect, controls, loader;
-var object, sphere, manager;
+var object, sphere, manager, line, group;
 var texture, textureLoader;
 
 var mouseX = 0, mouseY = 0;
@@ -19,28 +19,31 @@ render();
 
 function createCamera(){
   camera = new THREE.PerspectiveCamera(
-    25, 
+    70, 
     window.innerWidth/window.innerHeight,
     1,
-    1000
+    5000
   );
-  camera.position.set(0, 0, 200);
+  camera.position.set(100, 100, 100);
 }
 
 function createScene(){
     scene = new THREE.Scene();
-    scene.background = new THREE.Color('#000');
+    scene.background = new THREE.Color('#2EC4B6');
     //scene.fog = new THREE.fog(0xffffff, 1, 10000);
 }
 
 function createLight(){
-  const light1 = new THREE.PointLight(0xffffff);
+  const light1 = new THREE.PointLight(0x2EC4B6);
   light1.position.set(500, 500, 500);
-  scene.add(light1);
+  //scene.add(light1);
 
-  const light2 = new THREE.PointLight(0xffffff, 0.25);
+  const light2 = new THREE.PointLight(0x2EC4B6, 0.25);
   light2.position.set(-500, -500, -500);
   scene.add(light2);
+
+  const light3 = new THREE.AmbientLight(0x383A3F, 1);
+  scene.add(light3);
 }
 
 
@@ -52,8 +55,10 @@ function createOthers(){
 function loadModel(){
   object.traverse( function(child){
     if (child.isMesh) child.material.map = texture;
+    child.color = 0xffffff;
   });
   object.position.y = 0;
+  object.position.x = 0;
   scene.add(object);
 }
 
@@ -70,7 +75,7 @@ function onError() {}
 
 function importTexture(){
   textureLoader = new THREE.TextureLoader( manager );
-	texture = textureLoader.load( './texture/kandao3_depthmap.jpg' );
+	texture = textureLoader.load( '../texture/kandao3_depthmap.jpg' );
 }
 
 function createSceneContent(){
@@ -80,9 +85,12 @@ function createSceneContent(){
   }
 
   loader = new OBJLoader(manager);
-  loader.load('../model/adasdasd.obj', function(obj){
+  line = new THREE.Group();
+  
+  loader.load('../model/TableChairs.obj', function(obj){
     object = obj;
   }, onProgress, onError);
+
     /*sphere = new THREE.Mesh(
         new THREE.SphereBufferGeometry(10, 100, 100),
         new THREE.MeshPhongMaterial({flatShading: true, map: texture}));
@@ -122,8 +130,8 @@ function render(){
 
   //controls.update();
 
-  camera.position.x += (mouseX - camera.position.x)*0.05;
-  camera.position.y += (-mouseY - camera.position.y)*0.05;
+  camera.position.x += (mouseX - camera.position.x)*0.002;
+  //camera.position.y += (-mouseY - camera.position.y)*0.002;
   camera.lookAt(scene.position);
   //effect.render(scene, camera);
   renderer.render(scene, camera);
