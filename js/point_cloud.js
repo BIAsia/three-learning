@@ -8,6 +8,7 @@ var object, sphere, manager, line, group;
 var texture, textureLoader,mesh;
 var gui = new dat.GUI();
 
+
 var guicontrols = new function(){
   this.rotationx = 0;
   this.rotationy = 0;
@@ -27,7 +28,7 @@ render();
 
 function createCamera(){
   camera = new THREE.PerspectiveCamera(
-    20, 
+    50, 
     window.innerWidth/window.innerHeight,
     1,
     5000
@@ -37,7 +38,7 @@ function createCamera(){
 
 function createScene(){
     scene = new THREE.Scene();
-    scene.background = new THREE.Color('#E54B4B');
+    scene.background = new THREE.Color('#000');
     scene.fog = new THREE.FogExp2(0xE54B4B, 0.002);
 }
 
@@ -69,20 +70,30 @@ function createGUI(){
 }
 
 function loadModel(){
-  let material = new THREE.PointsMaterial({color:0xFFFFFF, size:0.01, opacity:0.4, transparent:true});
+  let pointmaterial = new THREE.PointsMaterial({color:0xFFFFFF, size:1, opacity:0.6, transparent:true});
+  let linematerial = new THREE.LineBasicMaterial({color:0x222222, opacity:0.1, transparent:true, linewidth:0.1});
     
     object.traverse(child=> {
       if (child.isMesh){
-        mesh = new THREE.Points(child.geometry, material);
+        mesh = new THREE.Points(child.geometry, pointmaterial);
+        group.add(mesh);
+        mesh = new THREE.Line(child.geometry, linematerial);
         group.add(mesh);
       }
     });
-    group.position.y = 0;
-    group.rotation.x = 90;
-    group.rotation.y = 5;
+    //group.position.z = 70;
+    group.position.x = -95;
+    group.position.y = -100;
+    group.rotation.x = 0;
+    group.rotation.y = Math.PI/2;
+    group.rotation.z = 0;
+    
     //mesh = new THREE.Points(obj.children[0].geometry, material);
     //mesh.position.y = -15;
+
     scene.add(group);
+    updateForDrift();
+    
 /*
   object.traverse( function(child){
     if (child.isMesh) child.material.map = texture;
@@ -110,7 +121,7 @@ function importTexture(){
 }
 
 function createSceneContent(){
-  group = new THREE.Group();
+  group = new THREE.Object3D();
   manager = new THREE.LoadingManager(loadModel);
   manager.onProgress = function(item, loaded, total){
     console.log(item, loaded, total);
@@ -119,7 +130,7 @@ function createSceneContent(){
   loader = new OBJLoader(manager);
   line = new THREE.Group();
   
-  loader.load('../model/Controller.obj', function(obj){
+  loader.load('../model/low_building.obj', function(obj){
     object = obj;
   }, onProgress, onError);
 
@@ -149,6 +160,7 @@ function init(){
   createOthers();
   controls = new THREE.LoadingManager(loadModel);
   
+  
 
   //document.body.appendChild(effect.domElement);
   document.body.appendChild(renderer.domElement);
@@ -161,24 +173,82 @@ function render(){
   var timer = Date.now() - start;
 
   animate(timer);
-  //controls.update();
 
-  //camera.position.x += (mouseX - camera.position.x)*0.0003;
-  //camera.position.y += (-mouseY - camera.position.y)*0.0003;
-  //camera.lookAt(scene.position);
+  
+  //controls.update();
+  camera.position.z += (mouseX - camera.position.x)*0.003;
+  //camera.position.x += (mouseX - camera.position.x)*0.003;
+  //camera.position.y += (-mouseY - camera.position.y)*0.003;
+  camera.lookAt(scene.position);
   //effect.render(scene, camera);
   renderer.render(scene, camera);
 }
 
-function animate(timer){
+function updateForDrift(){
+  console.log(group);
+  group.children.forEach(child => {
+    console.log(child.geometry);
+    var positions = child.geometry.attributes.position;
+    console.log(positions);
+
+    for (var i = 0; i < positions.count; i++){
+      var p = positions[i];
+      //console.log(v);
+      p += randomVelocity();
+      //console.log(v);
+      if (p > 1){
+        p.multiplyScalar(0.9997);
+      }
+    }
+    child.geometry.attributes.position.needsUpdate = true;
+    
+    
+    //if (child)
+    //var geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
+    //console.log(geometry);
+    
+/*
+    var vertices = geometry.attributes.position.array;
+    console.log(vertices);
+
+    for (var i = 0; i < vertices.length; i++){
+      var v = vertices[i];
+      v.add(randomVelocity());
+      if (v.length() > 1){
+        v.multiplyScalar(0.9997);
+      }
+    }
+    geometry.attributes.position.needsUpdate = true;*/
+  });
   
+}
+
+function randomVelocity() {
+  var dx = 0.001 + 0.003*Math.random();
+  var dy = 0.001 + 0.003*Math.random();
+  var dz = 0.001 + 0.003*Math.random();
+  if (Math.random() < 0.5) {
+      dx = -dx;
+  }
+  if (Math.random() < 0.5) {
+      dy = -dy;
+  }
+  if (Math.random() < 0.5) {
+      dz = -dz;
+  }
+  return new THREE.Vector3(dx,dy,dz);
+}
+
+function animate(timer){
+  scene.fog.color.offsetHSL(0.001,0,0);
+  console.log(scene.fog.color);
+  
+  /*
   group.rotation.x = guicontrols.rotationx;
   group.rotation.y = guicontrols.rotationy;
-  group.rotation.z = guicontrols.rotationz;
-  /*
-  group.rotation.x = timer*0.0001;
-  group.rotation.y = timer*0.0001;
-  group.rotation.z = timer*0.0001;*/
+  group.rotation.z = guicontrols.rotationz;*/
+  
+  //group.rotation.y += 0.001;
 
   //sphere.position.y = Math.abs(Math.sin(timer*0.002))*150;
   //sphere.rotation.x = timer*0.03;

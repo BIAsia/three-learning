@@ -74,7 +74,7 @@ function onError() {}
 
 function importTexture(){
   textureLoader = new THREE.TextureLoader( manager );
-	texture = textureLoader.load( './texture/kandao3_depthmap.jpg' );
+	texture = textureLoader.load( '../texture/kandao3_depthmap.jpg' );
 }
 
 function import_obj(){
